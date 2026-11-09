@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ -z "${ORBIS_SDK:-}" ]; then
+  echo "ORBIS_SDK must be set before running a PS4 build." >&2
+  exit 1
+fi
+
+cmake -S . -B build-ps4 -DPS4_TARGET=ON -DORBIS_SDK="${ORBIS_SDK}"
+cmake --build build-ps4

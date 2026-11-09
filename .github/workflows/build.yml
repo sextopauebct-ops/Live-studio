@@ -1,1 +1,30 @@
-.github/workflows/build.yml
+name: Live Studio CI
+
+on:
+  push:
+    branches: [ main, feature/live-studio-foundation ]
+  pull_request:
+
+jobs:
+  build-host:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake g++ build-essential
+
+      - name: Configure and build host validation target
+        run: |
+          cmake -S . -B build -DPS4_TARGET=OFF
+          cmake --build build
+
+  build-ps4:
+    runs-on: ubuntu-latest
+    if: false
+    steps:
+      - name: Placeholder for PS4/OpenOrbis build
+        run: echo "PS4 build requires OpenOrbis toolchain and make_pkg in a compatible environment."

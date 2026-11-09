@@ -18,6 +18,7 @@ private:
     bool m_connected = false;
 };
 
+// Host-side TCP reachability probe. This does not receive or decode video.
 class NetworkManager {
 public:
     bool connect(const std::string& ip, uint16_t port);
@@ -27,6 +28,7 @@ public:
 
 private:
     bool m_connected = false;
+    std::string m_lastError;
 };
 
 class StreamingManager {

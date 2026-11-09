@@ -24,6 +24,13 @@ add_executable(LiveStudio_state_tests tests/state_tests.cpp)
 target_link_libraries(LiveStudio_state_tests PRIVATE live_studio_core)
 add_test(NAME LiveStudio_state_tests COMMAND LiveStudio_state_tests)
 
+if(UNIX)
+    find_package(Threads REQUIRED)
+    add_executable(LiveStudio_network_tests tests/network_tests.cpp)
+    target_link_libraries(LiveStudio_network_tests PRIVATE live_studio_core Threads::Threads)
+    add_test(NAME LiveStudio_network_tests COMMAND LiveStudio_network_tests)
+endif()
+
 option(PS4_TARGET "Build for PS4/OpenOrbis (not yet implemented)" OFF)
 if(PS4_TARGET)
     message(FATAL_ERROR "PS4 target is not yet a verified build. Toolchain integration/package metadata must be implemented and tested before enabling this option.")

@@ -1,33 +1,26 @@
 # LIVE STUDIO
 
-Live Studio is a PS4 homebrew prototype focused on live gameplay streaming with an iPhone camera source.
+Live Studio is an early PS4 homebrew prototype. The repository currently contains a portable C++ state/configuration model and host-side tests—not a PS4 application or streaming client.
 
-Project status:
-- Repository audited and initialized.
-- Project foundation created.
-- Host-side validation build is implemented.
-- PS4/OpenOrbis build structure is prepared.
-- A real .pkg generation still requires the official OpenOrbis Toolchain and PS4 packaging tools in a compatible environment.
+## Current status
+- Host build and state tests: implemented in CMake/CI.
+- Camera network protocol and video decoding: not implemented.
+- PS4 UI/rendering integration: not implemented.
+- Game-wide overlay: not a universal PS4 homebrew capability; do not assume it works.
+- RTMP encoding/output and audio capture: not implemented.
+- PS4 ELF/SELF/PKG pipeline: not yet verified; no installable PKG is produced by this project at this stage.
 
-Architecture notes:
-- A direct overlay over arbitrary PS4 game content is not universally supported by the platform and should not be assumed.
-- The feasible architecture is a stand-alone homebrew app that accepts an iPhone camera feed over the local network and displays it inside the app, while preparing the pipeline for streaming ingest via RTMP or an intermediary gateway.
-
-Quick build (host validation):
+## Build and test on a computer
 ```bash
-cmake -S . -B build
-cmake --build build
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --parallel
+ctest --test-dir build --output-on-failure
 ./build/LiveStudio_host
 ```
 
-PS4 build:
-```bash
-export ORBIS_SDK=/path/to/OpenOrbis
-cmake -S . -B build-ps4 -DPS4_TARGET=ON -DORBIS_SDK="$ORBIS_SDK"
-cmake --build build-ps4
-```
+The host dashboard deliberately reports that camera/network/streaming backends are pending. It does not claim a connection or transmission that has not taken place.
 
-Package generation:
-- Requires OpenOrbis make_fself and make_pkg.
-- The final .pkg must be generated in a PS4-capable build environment.
+## Planned architecture
+An initial camera proof-of-concept should use a simple LAN transport (for example MJPEG over HTTP) from an iPhone camera app/page to a receiver, after validating decoder and socket support on the target. For a stable broadcast to Twitch/YouTube, use a separately tested gateway/encoder; do not assume PS4 game framebuffer capture, global overlay, hardware encode APIs, or RTMP support are available to homebrew.
 
+The PS4 target must be enabled only after a known OpenOrbis sample is compiled and packaged with pinned, verified tool versions and metadata. No PS4 hardware/Firmware 13.52/GoldHEN test is claimed.

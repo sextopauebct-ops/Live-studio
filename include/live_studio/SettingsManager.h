@@ -8,7 +8,6 @@ namespace live_studio {
 class SettingsManager {
 public:
     SettingsManager();
-
     void setCameraEnabled(bool enabled);
     void setResolution(int width, int height);
     void setCameraPosition(int x, int y);
@@ -42,7 +41,7 @@ private:
     int m_scaleX = 100;
     int m_scaleY = 100;
     int m_quality = 75;
-    std::string m_streamUrl = "rtmp://ingest.example.com/live/stream";
+    std::string m_streamUrl;
     std::string m_streamProtocol = "RTMP";
     std::string m_ip = "192.168.1.10";
     uint16_t m_port = 8080;

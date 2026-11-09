@@ -2,42 +2,23 @@
 
 namespace live_studio {
 
-CameraManager::CameraManager() = default;
-
-bool CameraManager::start() {
-    m_connected = true;
-    return true;
-}
-
-bool CameraManager::stop() {
+bool NetworkManager::connect(const std::string& ip, uint16_t port) {
+    (void)ip;
+    (void)port;
+    // A configured address is not proof of network connectivity.
     m_connected = false;
-    m_cameraConnected = false;
-    return true;
+    return false;
 }
 
-bool CameraManager::connectToSource(const std::string& ip, uint16_t port) {
-    m_ip = ip;
-    m_port = port;
-    m_connected = true;
-    m_cameraConnected = true;
-    return true;
-}
-
-bool CameraManager::disconnect() {
+bool NetworkManager::disconnect() {
     m_connected = false;
-    m_cameraConnected = false;
     return true;
 }
 
-bool CameraManager::isConnected() const { return m_connected && m_cameraConnected; }
+bool NetworkManager::isConnected() const { return m_connected; }
 
-std::string CameraManager::previewStatus() const {
-    return m_cameraConnected ? "Camera online" : "Camera offline";
-}
-
-void CameraManager::updateConnectionState(bool connected, bool cameraConnected) {
-    m_connected = connected;
-    m_cameraConnected = cameraConnected;
+std::string NetworkManager::statusText() const {
+    return m_connected ? "Connected" : "Not connected (network probe pending)";
 }
 
 } // namespace live_studio

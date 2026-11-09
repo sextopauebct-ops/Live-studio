@@ -1,29 +1,44 @@
-#include "live_studio/Managers.h"
+#include "live_studio/LiveStudioApp.h"
 
 namespace live_studio {
 
-StreamingManager::StreamingManager() = default;
+LiveStudioApp::LiveStudioApp() = default;
 
-bool StreamingManager::start() {
-    if (m_streamUrl.empty()) {
-        return false;
-    }
-    m_streaming = true;
+bool LiveStudioApp::initialize() {
+    m_initialized = true;
     return true;
 }
 
-bool StreamingManager::stop() {
-    m_streaming = false;
+bool LiveStudioApp::startTransmission() {
+    if (!m_initialized) return false;
+    const bool cameraOk = m_camera.connectToSource(m_settings.connectionIp(), m_settings.connectionPort());
+    const bool networkOk = m_network.connect(m_settings.connectionIp(), m_settings.connectionPort());
+    const bool streamOk = m_streaming.start();
+    m_transmitting = cameraOk && networkOk && streamOk;
+    return m_transmitting;
+}
+
+bool LiveStudioApp::stopTransmission() {
+    m_camera.disconnect();
+    m_network.disconnect();
+    m_streaming.stop();
+    m_transmitting = false;
     return true;
 }
 
-bool StreamingManager::isStreaming() const { return m_streaming; }
+void LiveStudioApp::update() {}
 
-std::string StreamingManager::statusText() const {
-    return m_streaming ? "Streaming" : "Idle";
+std::string LiveStudioApp::statusText() const {
+    if (!m_initialized) return "Initializing";
+    return m_transmitting ? "Live" : "Ready (prototype)";
 }
 
-void StreamingManager::setStreamUrl(const std::string& url) { m_streamUrl = url; }
-void StreamingManager::setProtocol(const std::string& protocol) { m_protocol = protocol; }
+std::string LiveStudioApp::connectionText() const { return m_network.statusText(); }
+std::string LiveStudioApp::cameraText() const { return m_camera.previewStatus(); }
+std::string LiveStudioApp::streamText() const { return m_streaming.statusText(); }
+SettingsManager& LiveStudioApp::settings() { return m_settings; }
+CameraManager& LiveStudioApp::camera() { return m_camera; }
+NetworkManager& LiveStudioApp::network() { return m_network; }
+StreamingManager& LiveStudioApp::streaming() { return m_streaming; }
 
 } // namespace live_studio

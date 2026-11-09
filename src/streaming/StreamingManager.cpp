@@ -2,24 +2,23 @@
 
 namespace live_studio {
 
-NetworkManager::NetworkManager() = default;
+bool StreamingManager::start() {
+    // RTMP encoding/transport has not been implemented; do not claim a live stream.
+    m_streaming = false;
+    return false;
+}
 
-bool NetworkManager::connect(const std::string& ip, uint16_t port) {
-    m_ip = ip;
-    m_port = port;
-    m_connected = true;
+bool StreamingManager::stop() {
+    m_streaming = false;
     return true;
 }
 
-bool NetworkManager::disconnect() {
-    m_connected = false;
-    return true;
+bool StreamingManager::isStreaming() const { return m_streaming; }
+
+std::string StreamingManager::statusText() const {
+    return m_streaming ? "Streaming" : "Idle (streaming backend pending)";
 }
 
-bool NetworkManager::isConnected() const { return m_connected; }
-
-std::string NetworkManager::statusText() const {
-    return m_connected ? "Connected" : "Disconnected";
-}
+void StreamingManager::setStreamUrl(const std::string& url) { m_streamUrl = url; }
 
 } // namespace live_studio

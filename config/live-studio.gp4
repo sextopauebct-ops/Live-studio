@@ -1,0 +1,17 @@
+<Project psproject="1">
+  <Volume>
+    <File src="build-ps4/LiveStudio.self" targ="eboot.bin" />
+  </Volume>
+  <Metadata>
+    <Title>Live Studio</Title>
+    <Type>Application</Type>
+    <Platform>PS4</Platform>
+    <Version>01.00</Version>
+  </Metadata>
+  <BuildParameters>
+    <ContentID>UP0001-CUSA00001_00-LIVESTUDIO000000</ContentID>
+    <AppType>Full</AppType>
+    <StorageType>HDD</StorageType>
+    <AppVersion>01.00</AppVersion>
+  </BuildParameters>
+</Project>

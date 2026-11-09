@@ -1,10 +1,17 @@
-#!/usr/bin/env bash
-set -euo pipefail
-
-if [ -z "${ORBIS_SDK:-}" ]; then
-  echo "ORBIS_SDK must be set before running a PS4 build." >&2
-  exit 1
-fi
-
-cmake -S . -B build-ps4 -DPS4_TARGET=ON -DORBIS_SDK="${ORBIS_SDK}"
-cmake --build build-ps4
+<Project psproject="1">
+  <Volume>
+    <File src="build-ps4/LiveStudio.self" targ="eboot.bin" />
+  </Volume>
+  <Metadata>
+    <Title>Live Studio</Title>
+    <Type>Application</Type>
+    <Platform>PS4</Platform>
+    <Version>01.00</Version>
+  </Metadata>
+  <BuildParameters>
+    <ContentID>UP0001-CUSA00001_00-LIVESTUDIO000000</ContentID>
+    <AppType>Full</AppType>
+    <StorageType>HDD</StorageType>
+    <AppVersion>01.00</AppVersion>
+  </BuildParameters>
+</Project>

@@ -9,7 +9,7 @@ Live Studio is an early PS4 homebrew prototype. The repository currently contain
 - PS4 UI/rendering integration: not implemented.
 - Game-wide overlay: not a universal PS4 homebrew capability; do not assume it works.
 - RTMP encoding/output and audio capture: not implemented.
-- PS4 ELF/SELF/PKG pipeline: not yet verified; no installable PKG is produced by this project at this stage.
+- PS4 ELF/SELF/PKG pipeline: prepared as a packaging workflow, but not verified here because the OpenOrbis toolchain and PS4 packaging utilities are not installed in this environment.
 
 ## Build and test on a computer
 ```bash
@@ -19,9 +19,17 @@ ctest --test-dir build --output-on-failure
 ./build/LiveStudio_host
 ```
 
-The host dashboard deliberately reports that camera/video/streaming backends are pending. A successful TCP probe does not imply a video preview or stream is available.
+## PS4 packaging flow (requires OpenOrbis)
+```bash
+export ORBIS_SDK=/path/to/OpenOrbis
+cmake -S . -B build-ps4 -DPS4_TARGET=ON -DORBIS_SDK="$ORBIS_SDK"
+cmake --build build-ps4
+./scripts/build_pkg.sh
+```
 
-## Planned architecture
-An initial camera proof-of-concept should use a simple LAN transport (for example MJPEG over HTTP) from an iPhone camera app/page to a receiver, after validating decoder and socket support on the target. For a stable broadcast to Twitch/YouTube, use a separately tested gateway/encoder; do not assume PS4 game framebuffer capture, global overlay, hardware encode APIs, or RTMP support are available to homebrew.
+This script expects:
+- a valid PS4 ELF in `build-ps4/LiveStudio.elf`
+- `make_fself` and `make_pkg` available in PATH
+- a valid `config/live-studio.gp4` file for the target package metadata
 
-The PS4 target must be enabled only after a known OpenOrbis sample is compiled and packaged with pinned, verified tool versions and metadata. No PS4 hardware/Firmware 13.52/GoldHEN test is claimed.
+It does not claim that a .pkg file has already been generated in this environment. The final installation package must be produced on a machine with the OpenOrbis packaging toolchain installed.
